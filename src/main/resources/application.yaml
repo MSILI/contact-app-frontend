@@ -21,6 +21,9 @@ spring:
           lob:
             non_contextual_creation: true
     show-sql: false
+  devtools:
+    restart:
+      enabled: true
 
 app:
   frontendUrl: http://localhost:4200
