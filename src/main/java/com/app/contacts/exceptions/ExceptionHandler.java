@@ -8,7 +8,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -19,7 +18,7 @@ import java.time.Instant;
 
 @ControllerAdvice
 @RestController
-public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -62,14 +61,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({ConstraintViolationException.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST,
                 ex.getLocalizedMessage(), request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
                                                                    WebRequest request) {
         String error = ex.getName() + " doit être de type " + ex.getRequiredType().getName();
@@ -79,21 +78,21 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({NotFoundException.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({NotFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.NOT_FOUND, ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({ExistsException.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({ExistsException.class})
     public ResponseEntity<Object> handleExistsException(ExistsException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST, ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({Exception.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
         ApiError apiError = null;
         if (ex.getMessage().contains("Accès refusé") || ex.getMessage().contains("Access denied")) {
@@ -106,7 +105,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler({SignInException.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({SignInException.class})
     public ResponseEntity<Object> handleSignInException(SignInException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST, ex.getMessage(),
                 request.getDescription(false));

@@ -22,8 +22,8 @@ public class ContactController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Contact>> findAll() {
-        return ResponseEntity.ok(contactService.findAll());
+    public ResponseEntity<List<Contact>> findAllByFirstnameOrLastname(@RequestParam(name = "q", defaultValue = "") String query) {
+        return ResponseEntity.ok(contactService.findAllByFirstnameOrLastname(query));
     }
 
     @GetMapping("/{id}")

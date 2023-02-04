@@ -22,14 +22,14 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> findAll() {
-        return this.contactRepository.findAll();
+    public List<Contact> findAllByFirstnameOrLastname(String query) {
+        return this.contactRepository.findAllByFirstnameOrLastnameContainingIgnoreCase(query, query);
     }
 
     @Override
     public Contact findById(Long id) {
         Optional<Contact> contactOptional = contactRepository.findById(id);
-        if (!contactOptional.isPresent()) {
+        if (contactOptional.isEmpty()) {
             throw new NotFoundException("Le contact avec l'id " + id + " est introuvable!");
         }
         return contactOptional.get();
@@ -37,10 +37,10 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Contact save(Contact contact) {
-        if (!contactRepository.existsByEmail(contact.getEmail())) {
+        if (contactRepository.existsByEmail(contact.getEmail())) {
             throw new ExistsException("Le contact avec l'email " + contact.getEmail() + " existe déjà!");
         }
-        if (!contactRepository.existsByPhone(contact.getPhone())) {
+        if (contactRepository.existsByPhone(contact.getPhone())) {
             throw new ExistsException("Le contact avec le numéro de téléphone " + contact.getPhone() + " existe déjà!");
         }
         return contactRepository.save(contact);
@@ -62,7 +62,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public void deleteById(Long id) {
-        if (!contactRepository.findById(id).isPresent()) {
+        if (contactRepository.findById(id).isEmpty()) {
             throw new NotFoundException("Le contact avec l'id " + id + " est introuvable!");
         }
         contactRepository.deleteById(id);
