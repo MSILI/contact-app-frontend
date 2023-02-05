@@ -8,9 +8,11 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
@@ -18,7 +20,7 @@ import java.time.Instant;
 
 @ControllerAdvice
 @RestController
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -61,14 +63,14 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({ConstraintViolationException.class})
+    @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST,
                 ex.getLocalizedMessage(), request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
                                                                    WebRequest request) {
         String error = ex.getName() + " doit être de type " + ex.getRequiredType().getName();
@@ -78,21 +80,21 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({NotFoundException.class})
+    @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.NOT_FOUND, ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({ExistsException.class})
+    @ExceptionHandler({ExistsException.class})
     public ResponseEntity<Object> handleExistsException(ExistsException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST, ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({Exception.class})
+    @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
         ApiError apiError = null;
         if (ex.getMessage().contains("Accès refusé") || ex.getMessage().contains("Access denied")) {
@@ -105,9 +107,16 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({SignInException.class})
+    @ExceptionHandler({SignInException.class})
     public ResponseEntity<Object> handleSignInException(SignInException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST, ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler({MaxUploadSizeExceededException.class})
+    public ResponseEntity<Object> handleMaxSizeException(SignInException ex, WebRequest request) {
+        ApiError apiError = new ApiError(Instant.now(), HttpStatus.EXPECTATION_FAILED, ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }

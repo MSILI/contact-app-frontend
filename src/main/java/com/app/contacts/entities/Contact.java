@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "contacts")
 public class Contact {

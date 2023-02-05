@@ -21,6 +21,10 @@ spring:
           lob:
             non_contextual_creation: true
     show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
   devtools:
     restart:
       enabled: true
