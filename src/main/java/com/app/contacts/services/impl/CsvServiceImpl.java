@@ -6,6 +6,7 @@ import com.app.contacts.utils.CsvUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @Service
@@ -24,5 +25,10 @@ public class CsvServiceImpl implements CsvService {
         } catch (IOException e) {
             throw new RuntimeException("Fail to store csv data " + e.getMessage());
         }
+    }
+
+    @Override
+    public ByteArrayInputStream download() {
+        return CsvUtils.contactsToCSV(this.contactRepository.findAll());
     }
 }
