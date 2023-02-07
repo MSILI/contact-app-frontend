@@ -4,6 +4,7 @@ import com.app.contacts.entities.Contact;
 import com.app.contacts.services.ContactService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/contacts")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class ContactController {
 
     private static final String RESOURCE_URI = "/api/contacts/";
