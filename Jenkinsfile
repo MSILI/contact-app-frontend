@@ -7,7 +7,7 @@ pipeline {
                git url: "https://github.com/ssbostan/neptune.git",
                    branch: "master",
                    changelog: true,
-                   poll: true
+                   poll: true,
                    credentialsId: 'GITHUB_CREDENTIALS'
 
            }
