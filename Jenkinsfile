@@ -25,13 +25,13 @@ pipeline {
        }
 
        stage("Test") {
-           withMaven {
-               steps {
+           steps {
+                withMaven {
                     sh """
-                       echo 'Tests execution'
-                       mvn test
+                           echo 'Tests execution'
+                           mvn test
                     """
-               }
+                }
            }
        }
 
