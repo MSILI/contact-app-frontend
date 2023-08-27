@@ -21,9 +21,19 @@ spring:
           lob:
             non_contextual_creation: true
     show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
   devtools:
     restart:
       enabled: true
 
 app:
-  frontendUrl: http://localhost:4200
+  cors:
+    allowedOrigins: http://localhost:4200
+  jwtExpirationInMs: 604800000
+  jwtSecret: Y29udGFjdC1hcHAta2V5
+  defaultAccount:
+    username: admin
+    password: admin

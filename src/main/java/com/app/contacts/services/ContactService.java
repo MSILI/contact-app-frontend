@@ -1,13 +1,12 @@
 package com.app.contacts.services;
 
 import com.app.contacts.entities.Contact;
-import com.app.contacts.repositories.ContactRepository;
 
 import java.util.List;
 
 public interface ContactService {
 
-    List<Contact> findAll();
+    List<Contact> findAllByFirstnameOrLastname(String query);
 
     Contact findById(Long id);
 

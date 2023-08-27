@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
@@ -19,7 +20,7 @@ import java.time.Instant;
 
 @ControllerAdvice
 @RestController
-public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -109,6 +110,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({SignInException.class})
     public ResponseEntity<Object> handleSignInException(SignInException ex, WebRequest request) {
         ApiError apiError = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST, ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler({MaxUploadSizeExceededException.class})
+    public ResponseEntity<Object> handleMaxSizeException(SignInException ex, WebRequest request) {
+        ApiError apiError = new ApiError(Instant.now(), HttpStatus.EXPECTATION_FAILED, ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
