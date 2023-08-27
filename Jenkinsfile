@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-       stage("Clone Git Repository") {
+       stage("Init & Checkout") {
            steps {
                git url: "https://github.com/ssbostan/neptune.git",
                    branch: "master",
@@ -12,6 +12,23 @@ pipeline {
 
            }
        }
-    }
+
+       stage("Build") {
+           steps {
+                sh """
+                    echo 'Build project'
+                    mvn -B -DskipTests clean package
+                """
+           }
+       }
+
+       stage("Test") {
+           steps {
+                sh """
+                   echo 'Tests execution'
+                   mvn test
+                """
+           }
+       }
     
 }
