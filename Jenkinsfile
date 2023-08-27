@@ -15,23 +15,20 @@ pipeline {
 
        stage("Build") {
            steps {
-                withMaven {
-                    sh """
-                        echo 'Build project'
-                        mvn -B -DskipTests clean package
-                    """
-                }
+              sh """
+                echo 'Build project'
+                mvn -B -DskipTests clean package
+              """
+
            }
        }
 
        stage("Test") {
            steps {
-                withMaven {
-                    sh """
-                           echo 'Tests execution'
-                           mvn test
-                    """
-                }
+              sh """
+                  echo 'Tests execution'
+                  mvn test
+              """
            }
        }
 
