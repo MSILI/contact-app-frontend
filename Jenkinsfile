@@ -4,13 +4,12 @@ pipeline {
     stages {
        stage("Clone Git Repository") {
            steps {
-               git(
-                   url: "https://github.com/ssbostan/neptune.git",
+               git url: "https://github.com/ssbostan/neptune.git",
                    branch: "master",
                    changelog: true,
                    poll: true
                    credentialsId: 'GITHUB_CREDENTIALS'
-               )
+
            }
        }
     }
